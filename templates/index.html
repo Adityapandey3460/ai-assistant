@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #ECE5DD;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #075E54;
+            color: white;
+            padding: 30px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chat-box {
+            width: 80%;
+            max-width: 650px;
+            height: 400px;
+            overflow-y: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+        .user-message {
+            background-color: #25D366;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .ai-message {
+            background-color: #F1F1F1;
+            color: black;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #25D366;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #128C7E;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">AI Assistant</div>
+    <div class="container">
+        <div class="chat-box" id="chatBox">
+            <div class="welcome-message" id="welcomeMessage">
+                <span>Welcome to AI Assistant</span>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="startBtn">🎤 Speak</button>
+            <button id="restartBtn">🔄 Restart</button>
+        </div>
+    </div>
+    <div class="footer">&copy; 2025 AI Assistant</div>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const chatBox = document.getElementById("chatBox");
+        let recognition;
+        let synth = window.speechSynthesis;
+
+        // Check for Web Speech API support
+        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+            alert("Your browser does not support speech recognition. Please use Google Chrome.");
+            startBtn.disabled = true;
+        }
+
+        if (!('speechSynthesis' in window)) {
+            alert("Your browser does not support speech synthesis. Please use Google Chrome.");
+        }
+
+        startBtn.addEventListener("click", startRecognition);
+        restartBtn.addEventListener("click", restartChat);
+
+        function restartChat() {
+            synth.cancel(); // Stop speech synthesis
+
+            if (recognition) {
+                recognition.stop();
+            }
+
+            chatBox.innerHTML = '<div class="welcome-message">Welcome to AI Assistant</div>';
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.split('=')[1]);
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function startRecognition() {
+            synth.cancel(); // Stop any ongoing speech synthesis
+
+            setTimeout(() => {
+                if (recognition) {
+                    recognition.stop();
+                }
+
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const userQuery = event.results[0][0].transcript;
+                    displayMessage("You", userQuery, 'user');
+
+                    const csrftoken = getCookie('csrftoken');
+
+                    fetch("{% url 'ask_ai' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": csrftoken
+                        },
+                        body: JSON.stringify({ command: userQuery })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        displayMessage("AI Assistant", data.response, 'ai');
+                        
+                        setTimeout(() => {
+                            speakResponse(data.response);
+                        }, 500); // Delay speaking slightly
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        displayMessage("AI Assistant", "Sorry, something went wrong. Please try again.", 'ai');
+                    });
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Speech recognition error:", event.error);
+                    displayMessage("AI Assistant", "Sorry, I couldn't understand you. Please try again.", 'ai');
+                };
+            }, 500);
+        }
+
+        function displayMessage(sender, message, type) {
+            if (chatBox.querySelector('.welcome-message')) {
+                chatBox.innerHTML = '';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'user' ? 'user-message' : 'ai-message';
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function speakResponse(text) {
+            let voices = synth.getVoices();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            
+            if (voices.length > 0) {
+                utterance.voice = voices.find(voice => voice.name.includes("Google")) || voices[0];
+            }
+
+            utterance.onstart = function() {
+                console.log("Speech started.");
+            };
+
+            utterance.onend = function() {
+                console.log("Speech ended.");
+            };
+
+            utterance.onerror = function(event) {
+                console.error("Speech synthesis error:", event.error);
+            };
+
+            synth.speak(utterance);
+        }
+
+        // Ensure voices are loaded before using them
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => {
+                console.log("Voices loaded:", synth.getVoices());
+            };
+        }
+    </script>
+</body>
+</html>
