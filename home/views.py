@@ -1,6 +1,6 @@
 import json
 import webbrowser
-import pyttsx3
+
 from openai import OpenAI
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -18,7 +18,7 @@ openai_client = OpenAI(
 )
 
 # Initialize text-to-speech engine
-engine = pyttsx3.init()
+
 
 # Function to process voice commands
 def process_command(command):
