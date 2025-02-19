@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # Load API key from config file
-with open("D:\\Django\\New_Project\\ai_assistant\\static\\config.json", "r") as file:
+with open("static/config.json", "r") as file:
     config = json.load(file)
     api_key = config['api_key']
 
