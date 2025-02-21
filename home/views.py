@@ -1,24 +1,18 @@
 import json
 import webbrowser
-
-from openai import OpenAI
+import cohere
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # Load API key from config file
-with open("static/config.json", "r") as file:
+with open("static\config.json", "r") as file:
     config = json.load(file)
-    api_key = config['api_key']
+    # api_key = config['api_key']
+    api_key="6IgJF11748bKzPEcswK2ZZN3mXerGUcaaK971klb"  # Replace with your API key
 
-# Initialize OpenAI client
-openai_client = OpenAI(
-    api_key=api_key,
-    base_url="https://api.deepinfra.com/v1/openai",
-)
-
-# Initialize text-to-speech engine
-
+# Initialize Cohere AI client
+cohere_client = cohere.Client(api_key=api_key)
 
 # Function to process voice commands
 def process_command(command):
@@ -59,21 +53,31 @@ def process_command(command):
         messages = [{"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": command}]
         
-        chat_completion = openai_client.chat.completions.create(
-            model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
-            messages=messages,
-        )
+        try:
+            response = cohere_client.chat(
+                model='c4ai-aya-expanse-32b',
+                message=command,
+                temperature=0.3,
+                prompt_truncation='AUTO'
+            )
+            chatbot_response = response.text
+        except Exception as e:
+            chatbot_response = f"API Error: {e}"
         
-        chatbot_response = chat_completion.choices[0].message.content
         return chatbot_response
 
 @csrf_exempt
 def ask_ai(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        command = data.get("command", "")
-        response = process_command(command)
-        return JsonResponse({"response": response})
+        try:
+            data = json.loads(request.body)
+            command = data.get("command", "")
+            response = process_command(command)
+            return JsonResponse({"response": response})
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
     
     return JsonResponse({"error": "Invalid request"}, status=400)
 
