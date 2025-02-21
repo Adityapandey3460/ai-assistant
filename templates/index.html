@@ -5,71 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Assistant</title>
     <style>
+        /* Base styles (for desktop) */
         body {
-            font-family: 'Arial', sans-serif;
-            background: #ECE5DD;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #64b5f6);
             text-align: center;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
+        
         .navbar {
-            background-color: #075E54;
+            background-color: #1565c0;
             color: white;
-            padding: 30px;
-            font-size: 36px;
+            padding: 20px;
+            font-size: 30px;
             font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
+        
         .container {
-            margin-top: 30px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
+        
         .chat-box {
-            width: 80%;
-            max-width: 650px;
-            height: 400px;
+            width: 90%;
+            max-width: 600px;
+            height: 450px;
             overflow-y: auto;
             background: white;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+        
+        .welcome-message {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-selector-container label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1565c0;
+        }
+        
+        .user-message, .ai-message {
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
         .user-message {
-            background-color: #25D366;
+            background-color: #1e88e5;
             color: white;
-            padding: 12px;
-            border-radius: 12px;
             text-align: right;
-            margin-bottom: 10px;
         }
+        
         .ai-message {
-            background-color: #F1F1F1;
+            background-color: #e3f2fd;
             color: black;
-            padding: 12px;
-            border-radius: 12px;
             text-align: left;
-            margin-bottom: 10px;
         }
+        
         .button-container {
-            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            margin-top: 10px;
         }
-        button {
-            background-color: #25D366;
+        
+        .button-container button {
+            background-color: #1e88e5;
             color: white;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             border: none;
             cursor: pointer;
             border-radius: 50px;
-            margin: 10px;
+            transition: 0.3s;
         }
-        button:hover {
-            background-color: #128C7E;
+        
+        .button-container button:hover {
+            background-color: #0d47a1;
         }
+        
+        .language-selector-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: auto;
+            padding: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-selector {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 2px solid #1e88e5;
+            background-color: white;
+            color: #1e88e5;
+            cursor: pointer;
+        }
+        
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+        
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #1e88e5;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .send-btn {
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: #0d47a1;
+        }
+        
         .footer {
-            margin-top: 20px;
-            color: #555;
+            margin-top: 10px;
+            color: #444;
+            font-size: 14px;
+        }
+        
+        /* Media Queries for Mobile Devices (Screen width <= 600px) */
+        @media (max-width: 600px) {
+            .navbar {
+                font-size: 24px; /* Reduce navbar font size */
+                padding: 15px; /* Reduce padding */
+            }
+        
+            .button-container {
+                flex-direction: row; /* Align buttons and dropdown in a single line */
+                gap: 8px; /* Add gap between items */
+                width: 100%; /* Full width */
+                padding: 0 10px; /* Add padding to sides */
+            }
+        
+            .button-container button {
+                padding: 8px 15px; /* Reduce button padding */
+                font-size: 14px; /* Reduce button font size */
+            }
+        
+            .language-selector-container {
+                padding: 6px; /* Reduce padding */
+                font-size: 14px; /* Reduce font size */
+            }
+        
+            .language-selector {
+                padding: 6px; /* Reduce padding */
+                font-size: 12px; /* Reduce font size */
+            }
+        
+            .chat-box {
+                height: 300px; /* Reduce chat box height */
+            }
+        
+            .welcome-message {
+                font-size: 18px; /* Reduce welcome message font size */
+            }
+        
+            .input-container {
+                flex-direction: column; /* Stack input and send button vertically */
+                gap: 10px; /* Add gap between input and button */
+            }
+        
+            .chat-input {
+                width: 100%; /* Full width for input */
+                font-size: 14px; /* Reduce input font size */
+            }
+        
+            .send-btn {
+                width: 100%; /* Full width for send button */
+                font-size: 14px; /* Reduce button font size */
+            }
+        
+            .footer {
+                font-size: 12px; /* Reduce footer font size */
+            }
         }
     </style>
 </head>
@@ -77,47 +224,72 @@
     <div class="navbar">AI Assistant</div>
     <div class="container">
         <div class="chat-box" id="chatBox">
-            <div class="welcome-message" id="welcomeMessage">
-                <span>Welcome to AI Assistant</span>
-            </div>
+            <div class="welcome-message">Welcome to AI Assistant</div>
         </div>
         <div class="button-container">
             <button id="startBtn">🎤 Speak</button>
+            <div class="language-selector-container">
+                <label for="languageSelect">Choose Language:</label>
+                <select id="languageSelect" class="language-selector">
+                    <option value="en-US" selected>English (Default)</option>
+                    <option value="hi-IN">Hindi</option>
+                    <option value="ta-IN">Tamil</option>
+                    <option value="te-IN">Telugu</option>
+                    <option value="bn-IN">Bengali</option>
+                    <option value="gu-IN">Gujarati</option>
+                    <option value="kn-IN">Kannada</option>
+                    <option value="ml-IN">Malayalam</option>
+                    <option value="mr-IN">Marathi</option>
+                    <option value="pa-IN">Punjabi</option>
+                </select>
+            </div>
             <button id="restartBtn">🔄 Restart</button>
+        </div>
+        <div class="input-container">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Type your message here...">
+            <button id="sendBtn" class="send-btn">Send</button>
         </div>
     </div>
     <div class="footer">&copy; All copyrights belongs to Aditya Pandey, 2025</div>
+</body>
+</html>
+  
 
     <script>
         const startBtn = document.getElementById("startBtn");
         const restartBtn = document.getElementById("restartBtn");
         const chatBox = document.getElementById("chatBox");
+        const chatInput = document.getElementById("chatInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const languageSelect = document.getElementById("languageSelect");
+        
         let recognition;
         let synth = window.speechSynthesis;
-
+        
         // Check for Web Speech API support
         if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
             alert("Your browser does not support speech recognition. Please use Google Chrome.");
             startBtn.disabled = true;
         }
-
+        
         if (!('speechSynthesis' in window)) {
             alert("Your browser does not support speech synthesis. Please use Google Chrome.");
         }
-
+        
         startBtn.addEventListener("click", startRecognition);
         restartBtn.addEventListener("click", restartChat);
-
+        sendBtn.addEventListener("click", sendTextMessage);
+        
         function restartChat() {
             synth.cancel(); // Stop speech synthesis
-
+        
             if (recognition) {
                 recognition.stop();
             }
-
+        
             chatBox.innerHTML = '<div class="welcome-message">Welcome to AI Assistant</div>';
         }
-
+        
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -132,92 +304,102 @@
             }
             return cookieValue;
         }
-
+        
         function startRecognition() {
             synth.cancel(); // Stop any ongoing speech synthesis
-
+        
             setTimeout(() => {
                 if (recognition) {
                     recognition.stop();
                 }
-
+        
                 recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = 'en-US';
+                recognition.lang = languageSelect.value; // Use selected language
                 recognition.start();
-
+        
                 recognition.onresult = function(event) {
                     const userQuery = event.results[0][0].transcript;
                     displayMessage("You", userQuery, 'user');
-
-                    const csrftoken = getCookie('csrftoken');
-
-                    fetch("{% url 'ask_ai' %}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": csrftoken
-                        },
-                        body: JSON.stringify({ command: userQuery })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        displayMessage("AI Assistant", data.response, 'ai');
-                        
-                        setTimeout(() => {
-                            speakResponse(data.response);
-                        }, 500); // Delay speaking slightly
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        displayMessage("AI Assistant", "Sorry, something went wrong. Please try again.", 'ai');
-                    });
+                    sendToAI(userQuery);
                 };
-
+        
                 recognition.onerror = function(event) {
                     console.error("Speech recognition error:", event.error);
                     displayMessage("AI Assistant", "Sorry, I couldn't understand you. Please try again.", 'ai');
                 };
             }, 500);
         }
-
+        
+        function sendTextMessage() {
+            const userQuery = chatInput.value.trim();
+            if (userQuery) {
+                displayMessage("You", userQuery, 'user');
+                sendToAI(userQuery);
+                chatInput.value = ''; // Clear input field
+            }
+        }
+        
+        function sendToAI(userQuery) {
+            const csrftoken = getCookie('csrftoken');
+            const selectedLanguage = languageSelect.value;
+        
+            fetch("{% url 'ask_ai' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
+                },
+                body: JSON.stringify({ command: userQuery, language: selectedLanguage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayMessage("AI Assistant", data.response, 'ai');
+                speakResponse(data.response, selectedLanguage);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                displayMessage("AI Assistant", "Sorry, something went wrong. Please try again.", 'ai');
+            });
+        }
+        
         function displayMessage(sender, message, type) {
             if (chatBox.querySelector('.welcome-message')) {
                 chatBox.innerHTML = '';
             }
-
+        
             const messageDiv = document.createElement('div');
             messageDiv.className = type === 'user' ? 'user-message' : 'ai-message';
             messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-
-        function speakResponse(text) {
+        
+        function speakResponse(text, lang) {
             let voices = synth.getVoices();
             let utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
+            utterance.lang = lang; // Use the selected language
             utterance.rate = 1;
             utterance.pitch = 1;
             
             if (voices.length > 0) {
-                utterance.voice = voices.find(voice => voice.name.includes("Google")) || voices[0];
+                utterance.voice = voices.find(voice => voice.lang === lang) || voices[0];
             }
-
+        
             utterance.onstart = function() {
                 console.log("Speech started.");
             };
-
+        
             utterance.onend = function() {
                 console.log("Speech ended.");
             };
-
+        
             utterance.onerror = function(event) {
                 console.error("Speech synthesis error:", event.error);
             };
-
+        
             synth.speak(utterance);
         }
-
+        
         // Ensure voices are loaded before using them
         if (speechSynthesis.onvoiceschanged !== undefined) {
             speechSynthesis.onvoiceschanged = () => {
