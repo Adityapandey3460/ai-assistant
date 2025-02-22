@@ -4,102 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Assistant</title>
+
     <style>
-        /* Base styles (for desktop) */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #64b5f6);
-            text-align: center;
+        /* Base styles (for all devices) */
+        html, body {
+            height: 100%;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f3f9ff, #e6f4ff); /* Light gradient background */
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            text-align: center;
+            color: #0056b3; /* Dark text for contrast */
         }
-        
-        .navbar {
-            background-color: #1565c0;
-            color: white;
-            padding: 20px;
-            font-size: 30px;
-            font-weight: bold;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        
+    
         .container {
-            margin-top: 20px;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
+            padding: 20px;
+            padding-bottom: 60px; /* Add padding to prevent content from being hidden behind the footer */
         }
-        
+    
+        /* Updated Navbar CSS */
+        .navbar {
+            background-color: #0056b3; /* Dark semi-transparent navbar */
+            color: white;
+            padding: 15px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px); /* Adds a blur effect for a modern look */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+    
+        .navbar:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+    
+        .navbar .logo {
+            font-size: 28px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+        .navbar .tagline {
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+    
+        /* Chat Box */
         .chat-box {
             width: 90%;
-            max-width: 600px;
-            height: 450px;
+            max-width: 800px;
+            height: 400px;
             overflow-y: auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            color: #333; /* Dark text for contrast */
+            transition: all 0.3s ease;
         }
-        
+    
+        .chat-box:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+    
         .welcome-message {
             font-size: 22px;
             font-weight: bold;
-            color: #1565c0;
+            color: #007bff; /* Matching the primary color */
             margin-bottom: 10px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        
-        .language-selector-container label {
-            font-size: 16px;
-            font-weight: bold;
-            color: #1565c0;
-        }
-        
+    
+        /* User and AI Messages */
         .user-message, .ai-message {
             padding: 12px;
             border-radius: 12px;
             margin-bottom: 10px;
             font-weight: 500;
+            transition: all 0.3s ease;
         }
-        
+    
         .user-message {
-            background-color: #1e88e5;
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient for user messages */
             color: white;
             text-align: right;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        
+    
         .ai-message {
-            background-color: #e3f2fd;
-            color: black;
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            color: #333; /* Dark text for contrast */
             text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+    
+        /* Button Container */
         .button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             width: 90%;
-            max-width: 600px;
-            margin-top: 10px;
+            max-width: 800px;
+            margin-top: 20px;
+            gap: 10px; /* Gap between buttons */
         }
-        
+    
         .button-container button {
-            background-color: #1e88e5;
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient buttons */
             color: white;
-            padding: 12px 25px;
+            padding: 12px 20px;
             font-size: 16px;
             border: none;
             cursor: pointer;
             border-radius: 50px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        
+    
         .button-container button:hover {
-            background-color: #0d47a1;
+            background: linear-gradient(135deg, #0056b3, #007bff); /* Reverse gradient on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
         }
-        
+    
+        /* Language Selector Container */
         .language-selector-container {
             display: flex;
             align-items: center;
@@ -107,131 +167,187 @@
             gap: 10px;
             width: auto;
             padding: 8px;
-            background: white;
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
-        
+    
+        .language-selector-container:hover {
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+    
         .language-selector {
             padding: 8px;
             font-size: 14px;
             border-radius: 8px;
-            border: 2px solid #1e88e5;
+            border: 2px solid #007bff; /* Matching the gradient */
             background-color: white;
-            color: #1e88e5;
+            color: #007bff; /* Matching the gradient */
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
+    
+        .language-selector:hover {
+            border-color: #0056b3;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    
+        /* Input Container */
         .input-container {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 90%;
-            max-width: 600px;
-            margin-top: 10px;
+            max-width: 800px;
+            margin-top: 20px;
+            gap: 10px;
         }
-        
+    
         .chat-input {
             flex-grow: 1;
             padding: 12px;
             font-size: 16px;
-            border: 2px solid #1e88e5;
+            border: 2px solid #007bff; /* Matching the gradient */
             border-radius: 10px;
             outline: none;
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+            color: #333; /* Dark text for contrast */
+            transition: all 0.3s ease;
         }
-        
+    
+        .chat-input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    
         .send-btn {
-            background-color: #1e88e5;
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient send button */
             color: white;
             border: none;
             padding: 12px 20px;
             font-size: 16px;
-            margin-left: 10px;
             border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
-        
+    
         .send-btn:hover {
-            background-color: #0d47a1;
+            background: linear-gradient(135deg, #0056b3, #007bff); /* Reverse gradient on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
         }
-        
+    
+        /* Footer */
         .footer {
-            margin-top: 10px;
-            color: #444;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #0056b3; /* Dark semi-transparent footer */
+            color: white;
+            text-align: center;
+            padding: 10px;
             font-size: 14px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px); /* Adds a blur effect for a modern look */
+            transition: all 0.3s ease;
         }
-        
-        /* Media Queries for Mobile Devices (Screen width <= 600px) */
-         @media (max-width: 600px) {
-            .navbar {
-                font-size: 24px; /* Reduce navbar font size */
-                padding: 15px; /* Reduce padding */
-            } 
-
-            
-        
-            .button-container {
-                flex-direction: row; /* Align buttons and dropdown in a single line */
-                gap: 8px; /* Add gap between items */
-                width: 100%; /* Full width */
-                padding: 0 10px; /* Add padding to sides */
-            }
-        
-            .button-container button {
-                padding: 8px 15px; /* Reduce button padding */
-                font-size: 14px; /* Reduce button font size */
-            }
-        
-            .language-selector-container {
-                padding: 6px; /* Reduce padding */
-                font-size: 14px; /* Reduce font size */
-            }
-        
-            .language-selector {
-                padding: 6px; /* Reduce padding */
-                font-size: 12px; /* Reduce font size */
-            }
-        
+    
+        .footer:hover {
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+    
+        /* Media Queries for Mobile Devices (width <= 600px) */
+        @media (max-width: 600px) {
             .chat-box {
-                height: 300px; /* Reduce chat box height */
+                height: 62vh; /* 62% of the viewport height */
+                width: 95%; /* Slightly wider for better usability */
+                margin-top: 10px; /* Reduce top margin for compact layout */
+                padding: 15px; /* Slightly reduce padding for more space */
             }
-        
-            .welcome-message {
-                font-size: 18px; /* Reduce welcome message font size */
+    
+            .button-container {
+                flex-direction: row; /* Keep buttons in one row */
+                gap: 10px;
+                margin-top: 10px; /* Add margin after chat box */
             }
-        
+    
+            .language-selector-container {
+                flex-direction: column; /* Keep language selector in one column*/
+                margin-top: 10px; /* Add margin after Speak/Restart buttons */
+            }
+    
             .input-container {
-                flex-direction: row; /* Stack input and send button vertically */
-                gap: 10px; /* Add gap between input and button */
+                flex-direction: row; /* Keep input and send button in one row */
+                margin-top: 10px; /* Add margin after Choose Language */
             }
-        
+    
+            .navbar {
+                font-size: 20px; /* Reduce navbar font size for mobile */
+                padding: 10px;
+                flex-direction: column; /* Stack logo and tagline vertically on mobile */
+                gap: 10px;
+            }
+    
+            .navbar .logo {
+                font-size: 24px;
+            }
+    
+            .navbar .tagline {
+                font-size: 14px;
+            }
+    
+            .welcome-message {
+                font-size: 16px; /* Reduce welcome message font size for mobile */
+            }
+    
+            .button-container button {
+                padding: 10px 15px; /* Adjust button padding for mobile */
+                font-size: 14px;
+            }
+    
+            .language-selector {
+                padding: 6px; /* Reduce padding for mobile */
+                font-size: 12px;
+            }
+    
             .chat-input {
-                width: 100%; /* Full width for input */
-                font-size: 14px; /* Reduce input font size */
+                padding: 10px; /* Adjust input padding for mobile */
+                font-size: 14px;
             }
-        
+    
             .send-btn {
-                width: 20%; /* Full width for send button */
-                font-size: 14px; /* Reduce button font size */
-            }
-        
-            .footer {
-                font-size: 12px; /* Reduce footer font size */
+                padding: 10px 15px; /* Adjust send button padding for mobile */
+                font-size: 14px;
             }
         }
     </style>
+
+
+
 </head>
 <body>
-    <div class="navbar">AI Assistant</div>
+    <!-- Updated Navbar -->
+    <div class="navbar">
+        <div class="logo">AI Assistant</div>
+        <div class="tagline">Your Personal AI Companion Created By Aditya Pandey</div>
+    </div>
+    
     <div class="container">
+        <!-- Chat Box (Response Box) -->
         <div class="chat-box" id="chatBox">
             <div class="welcome-message">Welcome to AI Assistant</div>
         </div>
+
+        <!-- Speak, Language, and Restart in One Row -->
         <div class="button-container">
             <button id="startBtn">🎤 Speak</button>
             <div class="language-selector-container">
-                <label for="languageSelect">Choose Language:</label>
+                <label for="languageSelect">Language:</label>
                 <select id="languageSelect" class="language-selector">
                     <option value="en-US" selected>English (Default)</option>
                     <option value="hi-IN">Hindi</option>
@@ -247,167 +363,189 @@
             </div>
             <button id="restartBtn">🔄 Restart</button>
         </div>
+
+        <!-- Message Box and Send Button in the Same Row -->
         <div class="input-container">
             <input type="text" id="chatInput" class="chat-input" placeholder="Type your message here...">
             <button id="sendBtn" class="send-btn">Send</button>
         </div>
     </div>
-    <div class="footer">&copy; All copyrights belongs to Aditya Pandey, 2025</div>
+    <div class="footer">&copy; 2025 Aditya Pandey. All rights reserved.</div>
 </body>
-</html>
-  
 
-    <script>
-        const startBtn = document.getElementById("startBtn");
-        const restartBtn = document.getElementById("restartBtn");
-        const chatBox = document.getElementById("chatBox");
-        const chatInput = document.getElementById("chatInput");
-        const sendBtn = document.getElementById("sendBtn");
-        const languageSelect = document.getElementById("languageSelect");
-        
-        let recognition;
-        let synth = window.speechSynthesis;
-        
-        // Check for Web Speech API support
-        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-            alert("Your browser does not support speech recognition. Please use Google Chrome.");
-            startBtn.disabled = true;
+
+<script>
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const languageSelect = document.getElementById("languageSelect");
+    
+    let recognition;
+    let synth = window.speechSynthesis;
+    
+    // Check for Web Speech API support
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        alert("Your browser does not support speech recognition. Please use Google Chrome.");
+        startBtn.disabled = true;
+    }
+    
+    if (!('speechSynthesis' in window)) {
+        alert("Your browser does not support speech synthesis. Please use Google Chrome.");
+    }
+    
+    startBtn.addEventListener("click", startRecognition);
+    restartBtn.addEventListener("click", restartChat);
+    sendBtn.addEventListener("click", sendTextMessage);
+    
+    function restartChat() {
+        synth.cancel(); // Stop speech synthesis
+    
+        if (recognition) {
+            recognition.stop();
         }
-        
-        if (!('speechSynthesis' in window)) {
-            alert("Your browser does not support speech synthesis. Please use Google Chrome.");
+    
+        chatBox.innerHTML = '<div class="welcome-message">Welcome to AI Assistant</div>';
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.split('=')[1]);
+                    break;
+                }
+            }
         }
-        
-        startBtn.addEventListener("click", startRecognition);
-        restartBtn.addEventListener("click", restartChat);
-        sendBtn.addEventListener("click", sendTextMessage);
-        
-        function restartChat() {
-            synth.cancel(); // Stop speech synthesis
-        
+        return cookieValue;
+    }
+    
+    function startRecognition() {
+        synth.cancel(); // Stop any ongoing speech synthesis
+    
+        setTimeout(() => {
             if (recognition) {
                 recognition.stop();
             }
-        
-            chatBox.innerHTML = '<div class="welcome-message">Welcome to AI Assistant</div>';
-        }
-        
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.startsWith(name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.split('=')[1]);
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        
-        function startRecognition() {
-            synth.cancel(); // Stop any ongoing speech synthesis
-        
-            setTimeout(() => {
-                if (recognition) {
-                    recognition.stop();
-                }
-        
-                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = languageSelect.value; // Use selected language
-                recognition.start();
-        
-                recognition.onresult = function(event) {
-                    const userQuery = event.results[0][0].transcript;
-                    displayMessage("You", userQuery, 'user');
-                    sendToAI(userQuery);
-                };
-        
-                recognition.onerror = function(event) {
-                    console.error("Speech recognition error:", event.error);
-                    displayMessage("AI Assistant", "Sorry, I couldn't understand you. Please try again.", 'ai');
-                };
-            }, 500);
-        }
-        
-        function sendTextMessage() {
-            const userQuery = chatInput.value.trim();
-            if (userQuery) {
+    
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = languageSelect.value; // Use selected language
+            recognition.start();
+    
+            recognition.onresult = function(event) {
+                const userQuery = event.results[0][0].transcript;
                 displayMessage("You", userQuery, 'user');
                 sendToAI(userQuery);
-                chatInput.value = ''; // Clear input field
-            }
+            };
+    
+            recognition.onerror = function(event) {
+                console.error("Speech recognition error:", event.error);
+                displayMessage("AI Assistant", "Sorry, I couldn't understand you. Please try again.", 'ai');
+            };
+        }, 500);
+    }
+    
+   function sendTextMessage() {
+        const userQuery = chatInput.value.trim();
+        if (userQuery) {
+            displayMessage("You", userQuery, 'user');
+            sendToAI(userQuery);
+            chatInput.value = ''; // Clear input field
         }
-        
-        function sendToAI(userQuery) {
-            const csrftoken = getCookie('csrftoken');
-            const selectedLanguage = languageSelect.value;
-        
-            fetch("{% url 'ask_ai' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken
-                },
-                body: JSON.stringify({ command: userQuery, language: selectedLanguage })
-            })
-            .then(response => response.json())
-            .then(data => {
+    }
+
+    function sendToAI(userQuery) {
+        const csrftoken = getCookie('csrftoken');
+        const selectedLanguage = languageSelect.value;
+    
+        fetch("{% url 'ask_ai' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({ command: userQuery, language: selectedLanguage })
+        })
+        .then(response => response.json())
+        .then(data => {    
+            if (data.redirect) {
+                // Display the confirmation message in the chat box
+                displayMessage("AI Assistant", data.response, 'ai');
+    
+                // Speak the confirmation message
+                speakResponse(data.response, selectedLanguage);
+    
+                // Open the URL in a new tab after a short delay
+                setTimeout(() => {
+                    const newTab = window.open(data.redirect, '_blank');
+                    if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+                        // Tab blocked, inform the user
+                        displayMessage("AI Assistant", "Unable to open the link. Please allow popups for this site.", 'ai');
+                    }
+                }, 2000); // 2-second delay to allow speech to complete
+            } else {
+                // Display the AI response
                 displayMessage("AI Assistant", data.response, 'ai');
                 speakResponse(data.response, selectedLanguage);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                displayMessage("AI Assistant", "Sorry, something went wrong. Please try again.", 'ai');
-            });
-        }
-        
-        function displayMessage(sender, message, type) {
-            if (chatBox.querySelector('.welcome-message')) {
-                chatBox.innerHTML = '';
             }
-        
-            const messageDiv = document.createElement('div');
-            messageDiv.className = type === 'user' ? 'user-message' : 'ai-message';
-            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            displayMessage("AI Assistant", "Sorry, something went wrong. Please try again.", 'ai');
+        });
+    }
+
+
+    function displayMessage(sender, message, type) {
+        if (chatBox.querySelector('.welcome-message')) {
+            chatBox.innerHTML = '';
         }
+    
+        const messageDiv = document.createElement('div');
+        messageDiv.className = type === 'user' ? 'user-message' : 'ai-message';
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    function speakResponse(text, lang) {
+        let voices = synth.getVoices();
+        let utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang; // Use the selected language
+        utterance.rate = 1;
+        utterance.pitch = 1;
         
-        function speakResponse(text, lang) {
-            let voices = synth.getVoices();
-            let utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = lang; // Use the selected language
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            
-            if (voices.length > 0) {
-                utterance.voice = voices.find(voice => voice.lang === lang) || voices[0];
-            }
-        
-            utterance.onstart = function() {
-                console.log("Speech started.");
-            };
-        
-            utterance.onend = function() {
-                console.log("Speech ended.");
-            };
-        
-            utterance.onerror = function(event) {
-                console.error("Speech synthesis error:", event.error);
-            };
-        
-            synth.speak(utterance);
+        if (voices.length > 0) {
+            utterance.voice = voices.find(voice => voice.lang === lang) || voices[0];
         }
+    
+        utterance.onstart = function() {
+            console.log("Speech started.");
+        };
+    
+        utterance.onend = function() {
+            console.log("Speech ended.");
+        };
+    
+        utterance.onerror = function(event) {
+            console.error("Speech synthesis error:", event.error);
+        };
         
-        // Ensure voices are loaded before using them
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = () => {
-                console.log("Voices loaded:", synth.getVoices());
-            };
-        }
-    </script>
-</body>
-</html>
+    
+        synth.speak(utterance);
+    }
+    
+    // Ensure voices are loaded before using them
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = () => {
+            console.log("Voices loaded:", synth.getVoices());
+        };
+    }
+</script>
+
+</html> 
+
