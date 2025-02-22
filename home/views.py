@@ -1,5 +1,4 @@
 import json
-import webbrowser
 import cohere
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -16,38 +15,26 @@ cohere_client = cohere.Client(api_key=api_key)
 # Function to process voice commands
 def process_command(command):
     command = command.lower()
-
     if "open google" in command:
-        webbrowser.open("https://www.google.com")
-        return "Opening Google."
+        return {"redirect": "https://www.google.com", "response": "Opening Google"}
     elif "open youtube" in command:
-        webbrowser.open("https://www.youtube.com")
-        return "Opening YouTube."
-    elif "relax" in command:
-        return "Okay, I'm going to relax now."
+        return {"redirect": "https://www.youtube.com", "response": "Opening YouTube"}
+    elif "open facebook" in command:
+        return {"redirect": "https://www.facebook.com", "response": "Opening Facebook"}
+    elif "open twitter" in command:
+        return {"redirect": "https://www.twitter.com", "response": "Opening Twitter"}
+    elif "open instagram" in command:
+        return {"redirect": "https://www.instagram.com", "response": "Opening Instagram"}
+    elif "open linkedin" in command:
+        return {"redirect": "https://www.linkedin.com", "response": "Opening LinkedIn"}
+    
+    # Add more websites as needed
     elif "search" in command:
         query = command.replace("search", "").strip()
-        
-        known_websites = {
-            "facebook": "https://www.facebook.com",
-            "twitter": "https://www.twitter.com",
-            "instagram": "https://www.instagram.com",
-            "linkedin": "https://www.linkedin.com",
-            "github": "https://www.github.com",
-        }
-        
-        if query in known_websites:
-            webbrowser.open(known_websites[query])
-            return f"Opening {query}."
-        else:
-            webbrowser.open(f"https://www.google.com/search?q={query}")
-            return f"Searching Google for {query}."
-    
+        return {"redirect": f"https://www.google.com/search?q={query}", "response": f"Searching Google for {query}"}
     elif "play" in command:
         song = command.replace("play", "").strip()
-        webbrowser.open(f"https://www.youtube.com/results?search_query={song}")
-        return f"Searching YouTube for {song}."
-    
+        return {"redirect": f"https://www.youtube.com/results?search_query={song}", "response": f"Searching YouTube for {song}"}
     else:
         messages = [{"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": command}]
@@ -63,7 +50,7 @@ def process_command(command):
         except Exception as e:
             chatbot_response = f"API Error: {e}"
         
-        return chatbot_response
+        return {"response": chatbot_response}
 
 @csrf_exempt
 def ask_ai(request):
@@ -71,8 +58,12 @@ def ask_ai(request):
         try:
             data = json.loads(request.body)
             command = data.get("command", "")
-            response = process_command(command)
-            return JsonResponse({"response": response})
+            result = process_command(command)
+            
+            if "redirect" in result:
+                return JsonResponse({"redirect": result["redirect"],"response": result["response"]})
+            else:
+                return JsonResponse({"response": result["response"]})
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
         except Exception as e:
